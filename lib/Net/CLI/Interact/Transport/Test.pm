@@ -11,7 +11,7 @@ coerce 'Net::CLI::Interact::Transport::Test::Options'
 
 package Net::CLI::Interact::Transport::Test;
 BEGIN {
-  $Net::CLI::Interact::Transport::Test::VERSION = '1.110890';
+  $Net::CLI::Interact::Transport::Test::VERSION = '1.110891';
 }
 
 use Moose;
@@ -59,7 +59,7 @@ Net::CLI::Interact::Transport::Test::Options - Testable CLI connection
 
 =head1 VERSION
 
-version 1.110890
+version 1.110891
 
 =head1 DECRIPTION
 

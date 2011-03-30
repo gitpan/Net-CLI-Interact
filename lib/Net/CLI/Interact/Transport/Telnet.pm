@@ -17,7 +17,7 @@ coerce 'Net::CLI::Interact::Transport::Telnet::Options'
 
 package Net::CLI::Interact::Transport::Telnet;
 BEGIN {
-  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.110890';
+  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.110891';
 }
 
 use Moose;
@@ -56,7 +56,7 @@ Net::CLI::Interact::Transport::Telnet::Options - TELNET based CLI connection
 
 =head1 VERSION
 
-version 1.110890
+version 1.110891
 
 =head1 DECRIPTION
 

@@ -32,7 +32,7 @@ sub BUILDARGS {
 
 package Net::CLI::Interact::Role::Engine;
 BEGIN {
-  $Net::CLI::Interact::Role::Engine::VERSION = '1.110890';
+  $Net::CLI::Interact::Role::Engine::VERSION = '1.110891';
 }
 
 use Moose::Role;
@@ -153,7 +153,7 @@ Net::CLI::Interact::Role::Engine::ExecuteOptions - Statement execution engine
 
 =head1 VERSION
 
-version 1.110890
+version 1.110891
 
 =head1 DESCRIPTION
 

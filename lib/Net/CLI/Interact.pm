@@ -12,7 +12,7 @@ sub register_implementation {
 
 package Net::CLI::Interact;
 BEGIN {
-  $Net::CLI::Interact::VERSION = '1.110890';
+  $Net::CLI::Interact::VERSION = '1.110891';
 }
 
 use Moose;
@@ -138,7 +138,7 @@ Net::CLI::Interact::Meta::Attribute::Trait::Mediated - Toolkit for CLI Automatio
 
 =head1 VERSION
 
-version 1.110890
+version 1.110891
 
 =head1 SYNOPSIS
 

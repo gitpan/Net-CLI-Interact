@@ -3,7 +3,7 @@ NAME
     Automation
 
 VERSION
-    version 1.110890
+    version 1.110891
 
 SYNOPSIS
      use Net::CLI::Interact;
