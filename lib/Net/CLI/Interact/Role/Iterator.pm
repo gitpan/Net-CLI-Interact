@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Role::Iterator;
 BEGIN {
-  $Net::CLI::Interact::Role::Iterator::VERSION = '1.110891';
+  $Net::CLI::Interact::Role::Iterator::VERSION = '1.110900';
 }
 
 use Moose::Role;
@@ -92,7 +92,7 @@ Net::CLI::Interact::Role::Iterator - Array-based Iterator
 
 =head1 VERSION
 
-version 1.110891
+version 1.110900
 
 =head1 SYNOPSIS
 
@@ -108,9 +108,9 @@ version 1.110891
 This module implements an array-based iterator which may be mixed-in to add
 management of a sequence of elements and processing of that sequence.
 
-The iterator is loosely based on L<MooseX::Iterator> but is limited to arrays
-and adds many other facilities. The following section describes the methods
-provided by this class.
+The iterator is inspired by L<MooseX::Iterator> but limited to arrays and adds
+many other facilities. The following section describes the methods provided by
+this class.
 
 =head1 USAGE
 

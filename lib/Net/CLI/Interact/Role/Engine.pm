@@ -32,7 +32,7 @@ sub BUILDARGS {
 
 package Net::CLI::Interact::Role::Engine;
 BEGIN {
-  $Net::CLI::Interact::Role::Engine::VERSION = '1.110891';
+  $Net::CLI::Interact::Role::Engine::VERSION = '1.110900';
 }
 
 use Moose::Role;
@@ -115,7 +115,7 @@ sub _execute_actions {
 
     my $set = Net::CLI::Interact::ActionSet->new({
         actions => [@actions],
-        current_match => ($self->prompt_re || $self->last_prompt_as_match),
+        current_match => ($self->prompt_re || $self->last_prompt_re),
         default_continuation => $self->default_continuation,
     });
     $set->register_callback(sub { $self->transport->do_action(@_) });
@@ -153,7 +153,7 @@ Net::CLI::Interact::Role::Engine::ExecuteOptions - Statement execution engine
 
 =head1 VERSION
 
-version 1.110891
+version 1.110900
 
 =head1 DESCRIPTION
 
@@ -175,9 +175,9 @@ The following options are supported:
 
 =item C<< timeout => $seconds >> (optional)
 
-Sets a value of C<timeout> for the L<Transport|Net::CLI::Interact::Transport>
-local to this call of C<cmd>, that overrides whatever is set in the Transport,
-or the default of 10 seconds.
+Sets a value of C<timeout> for the
+L<Transport|Net::CLI::Interact::Role::Transport> local to this call of C<cmd>,
+that overrides whatever is set in the Transport, or the default of 10 seconds.
 
 =item C<< no_ors => 1 >> (optional)
 
@@ -211,9 +211,10 @@ if there are insufficient parameters.
 
 =item C<< timeout => $seconds >> (optional)
 
-Sets a value of C<timeout> for the L<Transport|Net::CLI::Interact::Transport>
-local to this call of C<macro>, that overrides whatever is set in the
-Transport, or the default of 10 seconds.
+Sets a value of C<timeout> for the
+L<Transport|Net::CLI::Interact::Role::Transport> local to this call of
+C<macro>, that overrides whatever is set in the Transport, or the default of
+10 seconds.
 
 =back
 
@@ -232,8 +233,8 @@ Returns the gathered output after issueing the last recent C<send> command
 within the most recent C<cmd> or C<prompt>. That is, you get the output from
 the last command sent to the connected device.
 
-In scalar context all data is returned. In list context the gathered response
-is returned, only split into a list on the I<input record separator>
+In scalar context all data is returned. In list context the same gathered
+response is returned, only split into a list on the I<input record separator>
 (newline).
 
 =head2 last_actionset

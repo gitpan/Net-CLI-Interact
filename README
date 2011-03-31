@@ -3,7 +3,11 @@ NAME
     Automation
 
 VERSION
-    version 1.110891
+    version 1.110900
+
+PURPOSE
+    This module exists to support developers of applications and libraries
+    which must interact with a command line interface.
 
 SYNOPSIS
      use Net::CLI::Interact;
@@ -40,10 +44,6 @@ DESCRIPTION
     *   Unix and Windows support
 
     *   Reuseable device command phrasebooks
-
-PURPOSE
-    This module exists to support developers of applications and libraries
-    which must interact with a command line interface.
 
 INTERFACE
   new( \%options )
@@ -143,8 +143,8 @@ FUTHER READING
 
   Actions and ActionSets
     All commands and macros are composed from their phrasebook definitions
-    into Actions and ActionSets (simply iterable sequences of Actions). See
-    those modules' documentation for further details, in case you wish to
+    into Actions and ActionSets (iterable sequences of Actions). See those
+    modules' documentation for further details, in case you wish to
     introspect their structures.
 
 COMPOSITION

@@ -11,7 +11,7 @@ coerce 'Net::CLI::Interact::Transport::Test::Options'
 
 package Net::CLI::Interact::Transport::Test;
 BEGIN {
-  $Net::CLI::Interact::Transport::Test::VERSION = '1.110891';
+  $Net::CLI::Interact::Transport::Test::VERSION = '1.110900';
 }
 
 use Moose;
@@ -59,7 +59,7 @@ Net::CLI::Interact::Transport::Test::Options - Testable CLI connection
 
 =head1 VERSION
 
-version 1.110891
+version 1.110900
 
 =head1 DECRIPTION
 
@@ -71,13 +71,23 @@ test suite.
 
 =head2 app
 
-Defaults to the value of C<$^X>.
+Defaults to the value of C<$^X> (that is, Perl itself).
 
 =head2 runtime_options
 
-Returns Perl options which turn it into a C<cat> emulator:
+Returns Perl options which turn it into a CLI emulator:
 
- -pe 'BEGIN { $| = 1 }'
+ -ne 'BEGIN { $| = 1 }; print $_, time, "\nPROMPT>\n";'
+
+For example:
+
+ some command
+ some command
+ 1301578196
+ PROMPT>
+
+In this case the output command was "some command" which was echoed, followed
+by the dummy command output (epoch seconds), followed by a "prompt".
 
 =head1 COMPOSITION
 

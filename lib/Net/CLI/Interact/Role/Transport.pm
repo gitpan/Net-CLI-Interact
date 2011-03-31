@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Role::Transport;
 BEGIN {
-  $Net::CLI::Interact::Role::Transport::VERSION = '1.110891';
+  $Net::CLI::Interact::Role::Transport::VERSION = '1.110900';
 }
 
 use Moose::Role;
@@ -181,7 +181,7 @@ Net::CLI::Interact::Role::Transport - Wrapper for IPC::Run for a CLI
 
 =head1 VERSION
 
-version 1.110891
+version 1.110900
 
 =head1 DESCRIPTION
 
@@ -225,8 +225,9 @@ On failing to succeed with a Match, the module will time-out (see C<timeout>,
 below) and raise an exception.
 
 Output returned after issueing a command is stored within the Match Action's
-C<response> slot by this method, but then marshalled into the correct C<send>
-Action by the L<ActionSet|Net::CLI::Interact::ActionSet>.
+C<response> and C<response_stash> slots by this method, with the latter then
+marshalled into the correct C<send> Action by the
+L<ActionSet|Net::CLI::Interact::ActionSet>.
 
 =head2 send( @data )
 
@@ -276,8 +277,8 @@ Do not mess with this unless you know what you are doing.
 =head2 connect_options
 
 Slot for storing a set of options for the specific loaded Transport, passed by
-the user of C<Net::CLI::Interact> as a hash ref. Do not access this directly,
-but instead use C<runtime_options> from the specific Transport class.
+the user of Net::CLI::Interact as a hash ref. Do not access this directly, but
+instead use C<runtime_options> from the specific Transport class.
 
 =head2 logger
 

@@ -12,7 +12,7 @@ sub register_implementation {
 
 package Net::CLI::Interact;
 BEGIN {
-  $Net::CLI::Interact::VERSION = '1.110891';
+  $Net::CLI::Interact::VERSION = '1.110900';
 }
 
 use Moose;
@@ -138,7 +138,12 @@ Net::CLI::Interact::Meta::Attribute::Trait::Mediated - Toolkit for CLI Automatio
 
 =head1 VERSION
 
-version 1.110891
+version 1.110900
+
+=head1 PURPOSE
+
+This module exists to support developers of applications and libraries which
+must interact with a command line interface.
 
 =head1 SYNOPSIS
 
@@ -188,11 +193,6 @@ Reuseable device command phrasebooks
 
 =back
 
-=head1 PURPOSE
-
-This module exists to support developers of applications and libraries which
-must interact with a command line interface.
-
 =head1 INTERFACE
 
 =head2 new( \%options )
@@ -211,8 +211,9 @@ L<Net::CLI::Interact::Phrasebook> for further details.
 =item C<< transport => $backend >> (required)
 
 The name of the transport backend used for the session, which may be one of
-L<Telnet|Net::CLI::Interact::Telnet>, L<SSH|Net::CLI::Interact::SSH>, or
-L<Serial|Net::CLI::Interact::Serial>.
+L<Telnet|Net::CLI::Interact::Transport::Telnet>,
+L<SSH|Net::CLI::Interact::Transport::SSH>, or
+L<Serial|Net::CLI::Interact::Transport::Serial>.
 
 =item C<< connect_options => \%options >>
 
@@ -260,8 +261,10 @@ returned, only split into a list on the I<input record separator> (newline).
 
 Returns the L<Transport|Net::CLI::Interact::Role::Transport> backend which was
 loaded based on the C<transport> option to C<new>. See the
-L<Telnet|Net::CLI::Interact::Telnet>, L<SSH|Net::CLI::Interact::SSH>, or
-L<Serial|Net::CLI::Interact::Serial> documentation for further details.
+L<Telnet|Net::CLI::Interact::Transport::Telnet>,
+L<SSH|Net::CLI::Interact::Transport::SSH>, or
+L<Serial|Net::CLI::Interact::Transport::Serial> documentation for further
+details.
 
 =head2 phrasebook
 
@@ -310,9 +313,9 @@ documentation for further details.
 
 All commands and macros are composed from their phrasebook definitions into
 L<Actions|Net::CLI::Interact::Action> and
-L<ActionSets|Net::CLI::Interact::ActionSet> (simply iterable sequences of
-Actions). See those modules' documentation for further details, in case you
-wish to introspect their structures.
+L<ActionSets|Net::CLI::Interact::ActionSet> (iterable sequences of Actions).
+See those modules' documentation for further details, in case you wish to
+introspect their structures.
 
 =head1 COMPOSITION
 
