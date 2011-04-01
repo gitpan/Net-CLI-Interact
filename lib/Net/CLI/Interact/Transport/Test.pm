@@ -1,18 +1,19 @@
-package # hide from pause
-    Net::CLI::Interact::Transport::Test::Options;
-use Moose;
-
-use Moose::Util::TypeConstraints;
-coerce 'Net::CLI::Interact::Transport::Test::Options'
-    => from 'HashRef[Any]'
-        => via { Net::CLI::Interact::Transport::Test::Options->new($_) };
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 package Net::CLI::Interact::Transport::Test;
 BEGIN {
-  $Net::CLI::Interact::Transport::Test::VERSION = '1.110900';
+  $Net::CLI::Interact::Transport::Test::VERSION = '1.110910';
 }
+
+{
+    package # hide from pause
+        Net::CLI::Interact::Transport::Test::Options;
+    use Moose;
+
+    use Moose::Util::TypeConstraints;
+    coerce 'Net::CLI::Interact::Transport::Test::Options'
+        => from 'HashRef[Any]'
+            => via { Net::CLI::Interact::Transport::Test::Options->new($_) };
+}
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 use Moose;
 with 'Net::CLI::Interact::Role::Transport';
@@ -55,11 +56,11 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Transport::Test::Options - Testable CLI connection
+Net::CLI::Interact::Transport::Test - Testable CLI connection
 
 =head1 VERSION
 
-version 1.110900
+version 1.110910
 
 =head1 DECRIPTION
 

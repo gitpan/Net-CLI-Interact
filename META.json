@@ -13,14 +13,6 @@
       "version" : "2"
    },
    "name" : "Net-CLI-Interact",
-   "no_index" : {
-      "package" : [
-         "Net::CLI::Interact::Meta::Attribute::Trait::Mediated",
-         "Net::CLI::Interact::Role::Engine::ExecuteOptions",
-         "Net::CLI::Interact::Transport::Telnet::Options",
-         "Net::CLI::Interact::Transport::Test::Options"
-      ]
-   },
    "prereqs" : {
       "configure" : {
          "requires" : {
@@ -60,6 +52,6 @@
          "web" : "https://github.com/ollyg/Net-CLI-Interact"
       }
    },
-   "version" : "1.110900"
+   "version" : "1.110910"
 }
 

@@ -1,24 +1,25 @@
-package # hide from pause
-    Net::CLI::Interact::Transport::Telnet::Options;
-use Moose;
-
-has 'host' => (
-    is => 'rw',
-    isa => 'Str',
-    required => 1,
-);
-
-use Moose::Util::TypeConstraints;
-coerce 'Net::CLI::Interact::Transport::Telnet::Options'
-    => from 'HashRef[Any]'
-        => via { Net::CLI::Interact::Transport::Telnet::Options->new($_) };
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 package Net::CLI::Interact::Transport::Telnet;
 BEGIN {
-  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.110900';
+  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.110910';
 }
+
+{
+    package # hide from pause
+        Net::CLI::Interact::Transport::Telnet::Options;
+    use Moose;
+
+    has 'host' => (
+        is => 'rw',
+        isa => 'Str',
+        required => 1,
+    );
+
+    use Moose::Util::TypeConstraints;
+    coerce 'Net::CLI::Interact::Transport::Telnet::Options'
+        => from 'HashRef[Any]'
+            => via { Net::CLI::Interact::Transport::Telnet::Options->new($_) };
+}
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 use Moose;
 with 'Net::CLI::Interact::Role::Transport';
@@ -52,11 +53,11 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Transport::Telnet::Options - TELNET based CLI connection
+Net::CLI::Interact::Transport::Telnet - TELNET based CLI connection
 
 =head1 VERSION
 
-version 1.110900
+version 1.110910
 
 =head1 DECRIPTION
 

@@ -1,9 +1,8 @@
 NAME
-    Net::CLI::Interact::Meta::Attribute::Trait::Mediated - Toolkit for CLI
-    Automation
+    Net::CLI::Interact - Toolkit for CLI Automation
 
 VERSION
-    version 1.110900
+    version 1.110910
 
 PURPOSE
     This module exists to support developers of applications and libraries
@@ -44,6 +43,9 @@ DESCRIPTION
     *   Unix and Windows support
 
     *   Reuseable device command phrasebooks
+
+    If you're a new user, please read the Tutorial. There's also a Cookbook
+    and a Phrasebook Listing.
 
 INTERFACE
   new( \%options )

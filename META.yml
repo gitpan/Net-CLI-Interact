@@ -13,12 +13,6 @@ meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Net-CLI-Interact
-no_index:
-  package:
-    - Net::CLI::Interact::Meta::Attribute::Trait::Mediated
-    - Net::CLI::Interact::Role::Engine::ExecuteOptions
-    - Net::CLI::Interact::Transport::Telnet::Options
-    - Net::CLI::Interact::Transport::Test::Options
 requires:
   Class::MOP: 0
   Class::MOP::Class: 0
@@ -35,4 +29,4 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Net-CLI-Interact
   homepage: https://github.com/ollyg/Net-CLI-Interact/wiki
   repository: git://github.com/ollyg/Net-CLI-Interact.git
-version: 1.110900
+version: 1.110910

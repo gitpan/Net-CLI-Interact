@@ -1,39 +1,40 @@
-package # hide from pause
-    Net::CLI::Interact::Role::Engine::ExecuteOptions;
-use Moose;
-
-has 'no_ors' => (
-    is => 'ro',
-    isa => 'Bool',
-    default => 0,
-    required => 0,
-);
-
-has 'params' => (
-    is => 'ro',
-    isa => 'ArrayRef[Str]',
-    auto_deref => 1,
-    required => 0,
-);
-
-has 'timeout' => (
-    is => 'ro',
-    isa => 'Int',
-    required => 0,
-);
-
-sub BUILDARGS {
-    my ($class, @params) = @_;
-    return {} unless scalar @params > 0 and defined $params[0];
-    return { @params };
-}
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 package Net::CLI::Interact::Role::Engine;
 BEGIN {
-  $Net::CLI::Interact::Role::Engine::VERSION = '1.110900';
+  $Net::CLI::Interact::Role::Engine::VERSION = '1.110910';
 }
+
+{
+    package # hide from pause
+        Net::CLI::Interact::Role::Engine::ExecuteOptions;
+    use Moose;
+
+    has 'no_ors' => (
+        is => 'ro',
+        isa => 'Bool',
+        default => 0,
+        required => 0,
+    );
+
+    has 'params' => (
+        is => 'ro',
+        isa => 'ArrayRef[Str]',
+        auto_deref => 1,
+        required => 0,
+    );
+
+    has 'timeout' => (
+        is => 'ro',
+        isa => 'Int',
+        required => 0,
+    );
+
+    sub BUILDARGS {
+        my ($class, @params) = @_;
+        return {} unless scalar @params > 0 and defined $params[0];
+        return { @params };
+    }
+}
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 use Moose::Role;
 with 'Net::CLI::Interact::Role::Prompt';
@@ -149,11 +150,11 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Role::Engine::ExecuteOptions - Statement execution engine
+Net::CLI::Interact::Role::Engine - Statement execution engine
 
 =head1 VERSION
 
-version 1.110900
+version 1.110910
 
 =head1 DESCRIPTION
 

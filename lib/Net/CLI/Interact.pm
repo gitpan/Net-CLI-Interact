@@ -1,19 +1,20 @@
-package # hide from pause
-    Net::CLI::Interact::Meta::Attribute::Trait::Mediated;
-use Moose::Role;
-
-package # hide from pause
-    Moose::Meta::Attribute::Custom::Trait::Mediated;
-sub register_implementation {
-    return 'Net::CLI::Interact::Meta::Attribute::Trait::Mediated';
-}
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 package Net::CLI::Interact;
 BEGIN {
-  $Net::CLI::Interact::VERSION = '1.110900';
+  $Net::CLI::Interact::VERSION = '1.110910';
 }
+
+{
+    package # hide from pause
+        Net::CLI::Interact::Meta::Attribute::Trait::Mediated;
+    use Moose::Role;
+
+    package # hide from pause
+        Moose::Meta::Attribute::Custom::Trait::Mediated;
+    sub register_implementation {
+        return 'Net::CLI::Interact::Meta::Attribute::Trait::Mediated';
+    }
+}
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 use Moose;
 with 'Net::CLI::Interact::Role::Engine';
@@ -134,11 +135,11 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Meta::Attribute::Trait::Mediated - Toolkit for CLI Automation
+Net::CLI::Interact - Toolkit for CLI Automation
 
 =head1 VERSION
 
-version 1.110900
+version 1.110910
 
 =head1 PURPOSE
 
@@ -192,6 +193,11 @@ Unix and Windows support
 Reuseable device command phrasebooks
 
 =back
+
+If you're a new user, please read the
+L<Tutorial|Net:CLI::Interact::Manual::Tutorial>. There's also a
+L<Cookbook|Net:CLI::Interact::Manual::Cookbook> and a L<Phrasebook
+Listing|Net:CLI::Interact::Manual::Phrasebook>.
 
 =head1 INTERFACE
 

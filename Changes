@@ -1,6 +1,15 @@
+1.110910  2011-04-01 13:04:09 Europe/London
+
+  * Fix "private" packages scoping so that Dist::Zilla works
+  * Add tutorial and cookbook POD files
+
 1.110900  2011-03-31 14:41:17 Europe/London
 
+  * More POD
+
 1.110891  2011-03-30 13:16:46 Europe/London
+
+  * More POD
 
 1.110890  2011-03-30 13:13:48 Europe/London
 

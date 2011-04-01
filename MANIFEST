@@ -9,6 +9,8 @@ lib/Net/CLI/Interact.pm
 lib/Net/CLI/Interact/Action.pm
 lib/Net/CLI/Interact/ActionSet.pm
 lib/Net/CLI/Interact/Logger.pm
+lib/Net/CLI/Interact/Manual/Cookbook.pod
+lib/Net/CLI/Interact/Manual/Tutorial.pod
 lib/Net/CLI/Interact/Phrasebook.pm
 lib/Net/CLI/Interact/Role/Engine.pm
 lib/Net/CLI/Interact/Role/Iterator.pm
