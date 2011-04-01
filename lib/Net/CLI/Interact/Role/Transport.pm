@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Role::Transport;
 BEGIN {
-  $Net::CLI::Interact::Role::Transport::VERSION = '1.110910';
+  $Net::CLI::Interact::Role::Transport::VERSION = '1.110911';
 }
 
 use Moose::Role;
@@ -181,7 +181,7 @@ Net::CLI::Interact::Role::Transport - Wrapper for IPC::Run for a CLI
 
 =head1 VERSION
 
-version 1.110910
+version 1.110911
 
 =head1 DESCRIPTION
 

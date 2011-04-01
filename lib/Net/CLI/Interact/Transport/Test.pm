@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Test;
 BEGIN {
-  $Net::CLI::Interact::Transport::Test::VERSION = '1.110910';
+  $Net::CLI::Interact::Transport::Test::VERSION = '1.110911';
 }
 
 {
@@ -60,7 +60,7 @@ Net::CLI::Interact::Transport::Test - Testable CLI connection
 
 =head1 VERSION
 
-version 1.110910
+version 1.110911
 
 =head1 DECRIPTION
 

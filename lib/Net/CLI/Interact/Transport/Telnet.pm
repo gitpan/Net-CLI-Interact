@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Telnet;
 BEGIN {
-  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.110910';
+  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.110911';
 }
 
 {
@@ -57,7 +57,7 @@ Net::CLI::Interact::Transport::Telnet - TELNET based CLI connection
 
 =head1 VERSION
 
-version 1.110910
+version 1.110911
 
 =head1 DECRIPTION
 
