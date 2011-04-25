@@ -12,14 +12,12 @@ my $s = new_ok('Net::CLI::Interact' => [{
     add_library => 't/phrasebook',
 }]);
 
-$s->set_prompt('TEST_PROMPT');
+ok($s->set_prompt('TEST_PROMPT'), 'set the prompt');
 
 my $out = $s->cmd('TEST COMMAND');
 like($out, qr/^\d{10}$/, 'sent data and command response issued');
 
-ok($s->transport->disconnect, 'transport reinitialized');
-
-my $out2 = $s->cmd('TEST COMMAND');
-like($out2, qr/^\d{10}$/, 'more sent data and command response issued');
+ok($s->prompt_looks_like('TEST_PROMPT'), 'prompt looks like set prompt');
+ok(! $s->prompt_looks_like('TEST_PROMPT_TWO'), 'prompt does not look like other');
 
 done_testing;

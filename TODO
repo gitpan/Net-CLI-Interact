@@ -1,0 +1,5 @@
+implement full phrasebook
+investigate phrasebook library loading sanity
+    - yes, should find all instances of given personality
+    - and then use them as bases for search and load
+    - paying attention to the library and add_library ordering

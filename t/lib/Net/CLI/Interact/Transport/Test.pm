@@ -1,7 +1,4 @@
 package Net::CLI::Interact::Transport::Test;
-BEGIN {
-  $Net::CLI::Interact::Transport::Test::VERSION = '1.110911';
-}
 
 {
     package # hide from pause
@@ -16,7 +13,7 @@ BEGIN {
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 use Moose;
-with 'Net::CLI::Interact::Role::Transport';
+extends 'Net::CLI::Interact::Transport';
 
 has 'connect_options' => (
     is => 'ro',
@@ -49,18 +46,6 @@ sub runtime_options {
 1;
 
 # ABSTRACT: Testable CLI connection
-
-
-__END__
-=pod
-
-=head1 NAME
-
-Net::CLI::Interact::Transport::Test - Testable CLI connection
-
-=head1 VERSION
-
-version 1.110911
 
 =head1 DECRIPTION
 
@@ -98,20 +83,8 @@ See the following for further interface details:
 
 =item *
 
-L<Net::CLI::Interact::Role::Transport>
+L<Net::CLI::Interact::Transport>
 
 =back
 
-=head1 AUTHOR
-
-Oliver Gorwits <oliver@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Oliver Gorwits.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =cut
-

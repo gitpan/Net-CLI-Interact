@@ -3,11 +3,13 @@
 use strict; use warnings FATAL => 'all';
 use Test::More 0.88;
 
+use lib 't/lib';
 use Net::CLI::Interact;
 
 my $s = Net::CLI::Interact->new({
     transport => 'Test',
     personality => 'testing',
+    add_library => 't/phrasebook',
 });
 
 my $pb = $s->phrasebook;

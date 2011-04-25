@@ -2,7 +2,7 @@ NAME
     Net::CLI::Interact - Toolkit for CLI Automation
 
 VERSION
-    version 1.110911
+    version 1.111150
 
 PURPOSE
     This module exists to support developers of applications and libraries
@@ -49,8 +49,9 @@ DESCRIPTION
 
 INTERFACE
   new( \%options )
-    Prepares a new session for you, but will not connect to any device.
-    Options are:
+    Prepares a new session for you, but will not connect to any device. On
+    Windows platforms, you must download the "plink.exe" program, and pass
+    its location to the "app" parameter. Other options are:
 
     "personality => $name" (required)
         The family of device command phrasebooks to load. There is a
@@ -109,6 +110,12 @@ INTERFACE
     Returns the Phrasebook object which was loaded based on the
     "personality" option given to "new". See Net::CLI::Interact::Phrasebook
     for further details.
+
+  set_phrasebook( \%options )
+    Allows you to (re-)configure the loaded phrasebook, perhaps changing the
+    personality or library, or other properties. The %options Hash ref
+    should be any parameters from the Phrasebook module, but at a minimum
+    must include a "personality".
 
   set_default_contination( $macro_name )
     Briefly, a Continuation handles the slurping of paged output from

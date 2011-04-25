@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Role::Engine;
 BEGIN {
-  $Net::CLI::Interact::Role::Engine::VERSION = '1.110911';
+  $Net::CLI::Interact::Role::Engine::VERSION = '1.111150';
 }
 
 {
@@ -28,10 +28,17 @@ BEGIN {
         required => 0,
     );
 
+    has 'match' => (
+        is => 'rw',
+        isa => 'Str|RegexpRef',
+        predicate => 'has_match',
+        required => 0,
+    );
+
     sub BUILDARGS {
         my ($class, @params) = @_;
-        return {} unless scalar @params > 0 and defined $params[0];
-        return { @params };
+        return {} unless scalar @params > 0 and ref $params[0] eq ref {};
+        return $params[0];
     }
 }
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,6 +86,15 @@ sub cmd {
 
     $self->logger->log('engine', 'notice', 'running command', $command);
 
+    if ($options->has_match) {
+        # convert prompt name from user into regexpref, or die
+        if (ref $options->match eq ref '') {
+            $options->match(
+                $self->phrasebook->prompt( $options->match )->first->value );
+        }
+        $self->logger->log('engine', 'info', 'to match', $options->match);
+    }
+
     return $self->_execute_actions(
         $options,
         Net::CLI::Interact::Action->new({
@@ -112,11 +128,11 @@ sub _execute_actions {
     $self->transport->connect if not $self->transport->done_connect;
 
     # user can install a prompt, call find_prompt, or let us trigger that
-    $self->find_prompt if not ($self->prompt_re || $self->last_actionset);
+    $self->find_prompt(1) if not ($self->prompt_re || $self->last_actionset);
 
     my $set = Net::CLI::Interact::ActionSet->new({
         actions => [@actions],
-        current_match => ($self->prompt_re || $self->last_prompt_re),
+        current_match => ($options->match || $self->prompt_re || $self->last_prompt_re),
         default_continuation => $self->default_continuation,
     });
     $set->register_callback(sub { $self->transport->do_action(@_) });
@@ -154,7 +170,7 @@ Net::CLI::Interact::Role::Engine - Statement execution engine
 
 =head1 VERSION
 
-version 1.110911
+version 1.111150
 
 =head1 DESCRIPTION
 
@@ -177,13 +193,19 @@ The following options are supported:
 =item C<< timeout => $seconds >> (optional)
 
 Sets a value of C<timeout> for the
-L<Transport|Net::CLI::Interact::Role::Transport> local to this call of C<cmd>,
-that overrides whatever is set in the Transport, or the default of 10 seconds.
+L<Transport|Net::CLI::Interact::Transport> local to this call of C<cmd>, that
+overrides whatever is set in the Transport, or the default of 10 seconds.
 
 =item C<< no_ors => 1 >> (optional)
 
 When passed a true value, a newline character (in fact the value of C<ors>)
 will not be appended to the statement sent to the device.
+
+=item C<< match => $name | $regexp >> (optional)
+
+Allows this command only to complete with a custom match, which may either be
+the name of a loaded phrasebook Prompt, or your own regular expression
+reference (C<< qr// >>).
 
 =back
 
@@ -213,9 +235,8 @@ if there are insufficient parameters.
 =item C<< timeout => $seconds >> (optional)
 
 Sets a value of C<timeout> for the
-L<Transport|Net::CLI::Interact::Role::Transport> local to this call of
-C<macro>, that overrides whatever is set in the Transport, or the default of
-10 seconds.
+L<Transport|Net::CLI::Interact::Transport> local to this call of C<macro>,
+that overrides whatever is set in the Transport, or the default of 10 seconds.
 
 =back
 

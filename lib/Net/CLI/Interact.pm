@@ -1,6 +1,6 @@
 package Net::CLI::Interact;
 BEGIN {
-  $Net::CLI::Interact::VERSION = '1.110911';
+  $Net::CLI::Interact::VERSION = '1.111150';
 }
 
 {
@@ -106,9 +106,19 @@ sub _build_phrasebook {
     });
 }
 
+# does not really *change* the phrasebook, just reconfig and nuke
+sub set_phrasebook {
+    my ($self, $args) = @_;
+    return unless defined $args and ref $args eq ref {};
+    foreach my $k (keys %$args) {
+        $self->__mediator_params->{$k} = $args->{$k};
+    }
+    $self->clear_phrasebook;
+}
+
 has 'transport' => (
     is => 'ro',
-    does => 'Net::CLI::Interact::Role::Transport',
+    isa => 'Net::CLI::Interact::Transport',
     lazy_build => 1,
     traits => ['Mediated'],
 );
@@ -139,7 +149,7 @@ Net::CLI::Interact - Toolkit for CLI Automation
 
 =head1 VERSION
 
-version 1.110911
+version 1.111150
 
 =head1 PURPOSE
 
@@ -203,8 +213,9 @@ Listing|Net::CLI::Interact::Manual::Phrasebook>.
 
 =head2 new( \%options )
 
-Prepares a new session for you, but will not connect to any device. Options
-are:
+Prepares a new session for you, but will not connect to any device. On
+Windows platforms, you B<must> download the C<plink.exe> program, and pass
+its location to the C<app> parameter. Other options are:
 
 =over 4
 
@@ -265,7 +276,7 @@ returned, only split into a list on the I<input record separator> (newline).
 
 =head2 transport
 
-Returns the L<Transport|Net::CLI::Interact::Role::Transport> backend which was
+Returns the L<Transport|Net::CLI::Interact::Transport> backend which was
 loaded based on the C<transport> option to C<new>. See the
 L<Telnet|Net::CLI::Interact::Transport::Telnet>,
 L<SSH|Net::CLI::Interact::Transport::SSH>, or
@@ -277,6 +288,13 @@ details.
 Returns the Phrasebook object which was loaded based on the C<personality>
 option given to C<new>. See L<Net::CLI::Interact::Phrasebook> for further
 details.
+
+=head2 set_phrasebook( \%options )
+
+Allows you to (re-)configure the loaded phrasebook, perhaps changing the
+personality or library, or other properties. The C<%options> Hash ref should
+be any parameters from the L<Phrasebook|Net::CLI::Interact::Phrasebook>
+module, but at a minimum must include a C<personality>.
 
 =head2 set_default_contination( $macro_name )
 

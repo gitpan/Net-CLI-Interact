@@ -1,9 +1,9 @@
-package Net::CLI::Interact::Role::Transport;
+package Net::CLI::Interact::Transport;
 BEGIN {
-  $Net::CLI::Interact::Role::Transport::VERSION = '1.110911';
+  $Net::CLI::Interact::Transport::VERSION = '1.111150';
 }
 
-use Moose::Role;
+use Moose;
 use IPC::Run ();
 
 has 'logger' => (
@@ -84,6 +84,7 @@ has 'harness' => (
     isa => 'IPC::Run',
     required => 0,
     predicate => 'done_connect',
+    clearer => 'disconnect',
 );
 
 has '_timeout_obj' => (
@@ -109,6 +110,7 @@ sub connect {
     my $self = shift;
     $self->logger->log('transport', 'notice', 'booting IPC::Run harness for', $self->app);
 
+    $self->flush;
     $self->harness(
         IPC::Run::harness(
             [$self->app, $self->runtime_options],
@@ -118,6 +120,11 @@ sub connect {
                $self->_timeout_obj,
         )
     );
+}
+
+sub DEMOLISH {
+    my $self = shift;
+    $self->harness->kill_kill(grace => 1) if $^O eq 'MSWin32';
 }
 
 # returns either the content of the output buffer, or undef
@@ -177,11 +184,11 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Role::Transport - Wrapper for IPC::Run for a CLI
+Net::CLI::Interact::Transport - Wrapper for IPC::Run for a CLI
 
 =head1 VERSION
 
-version 1.110911
+version 1.111150
 
 =head1 DESCRIPTION
 
@@ -211,6 +218,13 @@ line arguments to the Application.
 
 Returns True if C<connect> has been called successfully, otherwise returns
 False.
+
+=head2 disconnect
+
+Undefines the IPC::Run harness and flushes any output data buffer such that
+the next call to C<cmd> or C<macro> will cause a new connection to be made.
+Useful if you intentionally timeout a command and end up with junk in the
+output buffer.
 
 =head2 do_action
 

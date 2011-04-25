@@ -1,11 +1,11 @@
-package Net::CLI::Interact::Transport::Telnet;
+package Net::CLI::Interact::Transport::SSH;
 BEGIN {
-  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.111150';
+  $Net::CLI::Interact::Transport::SSH::VERSION = '1.111150';
 }
 
 {
     package # hide from pause
-        Net::CLI::Interact::Transport::Telnet::Options;
+        Net::CLI::Interact::Transport::SSH::Options;
     use Moose;
 
     has 'host' => (
@@ -15,9 +15,9 @@ BEGIN {
     );
 
     use Moose::Util::TypeConstraints;
-    coerce 'Net::CLI::Interact::Transport::Telnet::Options'
+    coerce 'Net::CLI::Interact::Transport::SSH::Options'
         => from 'HashRef[Any]'
-            => via { Net::CLI::Interact::Transport::Telnet::Options->new($_) };
+            => via { Net::CLI::Interact::Transport::SSH::Options->new($_) };
 }
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,7 +26,7 @@ extends 'Net::CLI::Interact::Transport';
 
 has 'connect_options' => (
     is => 'ro',
-    isa => 'Net::CLI::Interact::Transport::Telnet::Options',
+    isa => 'Net::CLI::Interact::Transport::SSH::Options',
     coerce => 1,
     required => 1,
 );
@@ -41,19 +41,19 @@ sub _build_app {
     my $self = shift;
     confess "please pass location of plink.exe in 'app' parameter to new()\n"
         if $^O eq 'MSWin32';
-    return 'telnet'; # unix
+    return 'ssh'; # unix
 }
 
 sub runtime_options {
     return (
-        ($^O eq 'MSWin32' ? '-telnet' : ()),
+        ($^O eq 'MSWin32' ? '-ssh' : ()),
         (shift)->connect_options->host,
     );
 }
 
 1;
 
-# ABSTRACT: TELNET based CLI connection
+# ABSTRACT: SSH based CLI connection
 
 
 __END__
@@ -61,7 +61,7 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Transport::Telnet - TELNET based CLI connection
+Net::CLI::Interact::Transport::SSH - SSH based CLI connection
 
 =head1 VERSION
 
@@ -69,8 +69,8 @@ version 1.111150
 
 =head1 DECRIPTION
 
-This module provides an L<IPC::Run> wrapped instance of a TELNET client for
-use by L<Net::CLI::Interact>.
+This module provides an L<IPC::Run> wrapped instance of an SSH client for use
+by L<Net::CLI::Interact>.
 
 =head1 INTERFACE
 
@@ -78,7 +78,7 @@ use by L<Net::CLI::Interact>.
 
 On Windows platforms you B<must> download the C<plink.exe> program, and pass its
 location to the library in this parameter. On other platforms, this defaults to
-C<telnet>.
+C<ssh>.
 
 =head2 runtime_options
 
@@ -90,7 +90,7 @@ command line. Supported attributes:
 
 =item host (required)
 
-Host name or IP address of the host to which the TELNET application is to
+Host name or IP address of the host to which the SSH application is to
 connect.
 
 =back

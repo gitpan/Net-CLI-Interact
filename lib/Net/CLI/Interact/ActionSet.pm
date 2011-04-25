@@ -1,6 +1,6 @@
 package Net::CLI::Interact::ActionSet;
 BEGIN {
-  $Net::CLI::Interact::ActionSet::VERSION = '1.110911';
+  $Net::CLI::Interact::ActionSet::VERSION = '1.111150';
 }
 
 use Moose;
@@ -157,7 +157,7 @@ sub _marshall_responses {
 
         # remove echoed command from the beginning
         my $cmd = $send->value;
-        (my $output = $match->response_stash) =~ s/^$cmd\s+//;
+        (my $output = $match->response_stash) =~ s/^$cmd\s*//;
         $send->response($output);
     }
 }
@@ -176,7 +176,7 @@ Net::CLI::Interact::ActionSet - Conversation of Send and Match Actions
 
 =head1 VERSION
 
-version 1.110911
+version 1.111150
 
 =head1 DESCRIPTION
 
@@ -228,7 +228,7 @@ with the Action(s) according to how many are required.
 
 =head2 register_callback
 
-Allows the L<Transport|Net::CLI::Interact::Role::Transport> to be registered
+Allows the L<Transport|Net::CLI::Interact::Transport> to be registered
 such that when the ActionSet is executed, commands are sent to the registered
 callback subroutine. May be called more than once, and on execution each of
 the callbacks will be run, in turn and in order.

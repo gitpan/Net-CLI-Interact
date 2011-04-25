@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Phrasebook;
 BEGIN {
-  $Net::CLI::Interact::Phrasebook::VERSION = '1.110911';
+  $Net::CLI::Interact::Phrasebook::VERSION = '1.111150';
 }
 
 use Moose;
@@ -30,7 +30,8 @@ sub _build_library {
     my (undef, $directory, undef) = fileparse(
         $INC{ 'Net/CLI/Interact.pm' }
     );
-    return ["${directory}Interact/phrasebook"];
+    return [ Path::Class::Dir->new($directory)
+        ->subdir("Interact", "phrasebook")->stringify ];
 }
 
 has 'add_library' => (
@@ -55,6 +56,8 @@ sub prompt {
     return $self->_prompt->{$name};
 }
 
+sub prompt_names { return keys %{ (shift)->_prompt } }
+
 has '_macro' => (
     is => 'ro',
     isa => 'HashRef[Net::CLI::Interact::ActionSet]',
@@ -70,11 +73,13 @@ sub macro {
     return $self->_macro->{$name};
 }
 
+sub macro_names { return keys %{ (shift)->_macro } }
+
 # inflate the hashref into action objects
 sub _bake {
     my ($self, $data) = @_;
     return unless ref $data eq ref {} and keys %$data;
-    $self->logger->log('phrasebook', 'debug', 'storing type', $data->{type}, 'with name', $data->{name});
+    $self->logger->log('phrasebook', 'debug', 'storing', $data->{type}, $data->{name});
 
     my $slot = '_'. lc $data->{type};
     $self->$slot->{$data->{name}}
@@ -182,6 +187,7 @@ sub load_phrasebooks {
 }
 
 # finds the path of Phrasebooks within the Library leading to Personality
+# FIXME: *sniff* *sniff* this code seems a bit whiffy
 use Path::Class;
 sub _find_phrasebooks {
     my $self = shift;
@@ -200,7 +206,7 @@ sub _find_phrasebooks {
             $self->personality) unless $target;
 
     my @phrasebooks = ();
-    my $root = Path::Class::Dir->new('/');
+    my $root = Path::Class::Dir->new($target->is_absolute ? '' : ());
     foreach my $part ( $target->dir_list ) {
         $root = $root->subdir($part);
         next if scalar grep { $root->subsumes($_) } @libs;
@@ -228,7 +234,7 @@ Net::CLI::Interact::Phrasebook - Load command phrasebooks from a Library
 
 =head1 VERSION
 
-version 1.110911
+version 1.111150
 
 =head1 DESCRIPTION
 
@@ -324,11 +330,19 @@ Returns the Prompt associated to the given C<$name>, or throws an exception if
 no such prompt can be found. The returned object is an instance of
 L<Net::CLI::Interact::ActionSet>.
 
+=head2 prompt_names
+
+Returns a list of the names of the current loaded Prompts.
+
 =head2 macro( $name )
 
 Returns the Macro associated to the given C<$name>, or throws an exception if
 no such macro can be found. The returned object is an instance of
 L<Net::CLI::Interact::ActionSet>.
+
+=head2 macro_names
+
+Returns a list of the names of the current loaded Macros.
 
 =head1 PHRASEBOOK FORMAT
 
