@@ -1,6 +1,6 @@
 package Net::CLI::Interact;
 BEGIN {
-  $Net::CLI::Interact::VERSION = '1.111150';
+  $Net::CLI::Interact::VERSION = '1.111500';
 }
 
 {
@@ -26,7 +26,7 @@ has '__mediator_params' => (
     required => 1,
 );
 
-# takes the params has and returns two hashes, the params
+# takes the params hash and returns two hashes, the params
 # hash and a new hash of the current class's attribute slots
 sub _filter_my_attribute_list {
     my ($class, $params) = @_;
@@ -149,7 +149,7 @@ Net::CLI::Interact - Toolkit for CLI Automation
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 PURPOSE
 
@@ -223,7 +223,7 @@ its location to the C<app> parameter. Other options are:
 
 The family of device command phrasebooks to load. There is a built-in library
 within this module, or you can provide a search path to other libraries. See
-L<Net::CLI::Interact::Phrasebook> for further details.
+L<Net::CLI::Interact::Manual::Phrasebook> for further details.
 
 =item C<< transport => $backend >> (required)
 

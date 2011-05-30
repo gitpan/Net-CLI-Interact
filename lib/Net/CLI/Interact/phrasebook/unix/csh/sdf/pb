@@ -1,0 +1,6 @@
+macro sdf_login
+    send %s\n
+    match /BACKSPACE key: ?$/
+    send ''
+    follow /\(continue\)/ with "\n"
+    match prompt shell

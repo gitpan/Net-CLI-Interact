@@ -1,12 +1,16 @@
 package Net::CLI::Interact::Transport::SSH;
 BEGIN {
-  $Net::CLI::Interact::Transport::SSH::VERSION = '1.111150';
+  $Net::CLI::Interact::Transport::SSH::VERSION = '1.111500';
 }
+
+use Moose;
+extends 'Net::CLI::Interact::Transport';
 
 {
     package # hide from pause
         Net::CLI::Interact::Transport::SSH::Options;
     use Moose;
+    extends 'Net::CLI::Interact::Transport::Options';
 
     has 'host' => (
         is => 'rw',
@@ -21,9 +25,6 @@ BEGIN {
 }
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-use Moose;
-extends 'Net::CLI::Interact::Transport';
-
 has 'connect_options' => (
     is => 'ro',
     isa => 'Net::CLI::Interact::Transport::SSH::Options',
@@ -31,23 +32,18 @@ has 'connect_options' => (
     required => 1,
 );
 
-has 'app' => (
-    is => 'ro',
-    isa => 'Str',
-    lazy_build => 1,
-);
-
 sub _build_app {
     my $self = shift;
     confess "please pass location of plink.exe in 'app' parameter to new()\n"
-        if $^O eq 'MSWin32';
-    return 'ssh'; # unix
+        if $self->is_win32;
+    return 'ssh';
 }
 
 sub runtime_options {
+    my $self = shift;
     return (
-        ($^O eq 'MSWin32' ? '-ssh' : ()),
-        (shift)->connect_options->host,
+        ($self->is_win32 ? '-ssh' : ()),
+        $self->connect_options->host,
     );
 }
 
@@ -65,12 +61,12 @@ Net::CLI::Interact::Transport::SSH - SSH based CLI connection
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DECRIPTION
 
-This module provides an L<IPC::Run> wrapped instance of an SSH client for use
-by L<Net::CLI::Interact>.
+This module provides a wrapped instance of an SSH client for use by
+L<Net::CLI::Interact>.
 
 =head1 INTERFACE
 
@@ -78,7 +74,7 @@ by L<Net::CLI::Interact>.
 
 On Windows platforms you B<must> download the C<plink.exe> program, and pass its
 location to the library in this parameter. On other platforms, this defaults to
-C<ssh>.
+C<ssh> (openssh).
 
 =head2 runtime_options
 
@@ -92,6 +88,12 @@ command line. Supported attributes:
 
 Host name or IP address of the host to which the SSH application is to
 connect.
+
+=item reap
+
+Only used on Unix platforms, this installs a signal handler which attemps to
+reap the C<ssh> child process. Pass a true value to enable this feature only
+if you notice zombie processes are being left behind after use.
 
 =back
 

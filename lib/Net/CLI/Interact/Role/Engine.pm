@@ -1,12 +1,13 @@
 package Net::CLI::Interact::Role::Engine;
 BEGIN {
-  $Net::CLI::Interact::Role::Engine::VERSION = '1.111150';
+  $Net::CLI::Interact::Role::Engine::VERSION = '1.111500';
 }
 
 {
     package # hide from pause
         Net::CLI::Interact::Role::Engine::ExecuteOptions;
     use Moose;
+    use Moose::Util::TypeConstraints;
 
     has 'no_ors' => (
         is => 'ro',
@@ -24,13 +25,13 @@ BEGIN {
 
     has 'timeout' => (
         is => 'ro',
-        isa => 'Int',
+        isa => subtype( 'Int' => where { $_ > 0 } ),
         required => 0,
     );
 
     has 'match' => (
         is => 'rw',
-        isa => 'Str|RegexpRef',
+        isa => 'Str|RegexpRef|ArrayRef[RegexpRef]',
         predicate => 'has_match',
         required => 0,
     );
@@ -92,7 +93,8 @@ sub cmd {
             $options->match(
                 $self->phrasebook->prompt( $options->match )->first->value );
         }
-        $self->logger->log('engine', 'info', 'to match', $options->match);
+        $self->logger->log('engine', 'info', 'to match',
+            (ref $options->match eq ref [] ? (join '|', @{$options->match}) : $options->match));
     }
 
     return $self->_execute_actions(
@@ -125,7 +127,7 @@ sub _execute_actions {
     $self->logger->log('engine', 'notice', 'executing actions');
 
     # make connection on transport if not yet done
-    $self->transport->connect if not $self->transport->done_connect;
+    $self->transport->init if not $self->transport->connect_ready;
 
     # user can install a prompt, call find_prompt, or let us trigger that
     $self->find_prompt(1) if not ($self->prompt_re || $self->last_actionset);
@@ -170,7 +172,7 @@ Net::CLI::Interact::Role::Engine - Statement execution engine
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DESCRIPTION
 
@@ -201,11 +203,11 @@ overrides whatever is set in the Transport, or the default of 10 seconds.
 When passed a true value, a newline character (in fact the value of C<ors>)
 will not be appended to the statement sent to the device.
 
-=item C<< match => $name | $regexp >> (optional)
+=item C<< match => $name | $regexp  | \@regexps >> (optional)
 
 Allows this command only to complete with a custom match, which may either be
-the name of a loaded phrasebook Prompt, or your own regular expression
-reference (C<< qr// >>).
+the name of a loaded phrasebook Prompt, or one of more of your own regular
+expression references (C<< qr// >>).
 
 =back
 

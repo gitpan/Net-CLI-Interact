@@ -1,13 +1,17 @@
 package Net::CLI::Interact::Transport::Serial;
 BEGIN {
-  $Net::CLI::Interact::Transport::Serial::VERSION = '1.111150';
+  $Net::CLI::Interact::Transport::Serial::VERSION = '1.111500';
 }
+
+use Moose;
+extends 'Net::CLI::Interact::Transport';
 
 {
     package # hide from pause
         Net::CLI::Interact::Transport::Serial::Options;
     use Moose;
     use Moose::Util::TypeConstraints qw(enum);
+    extends 'Net::CLI::Interact::Transport::Options';
 
     has 'device' => (
         is => 'rw',
@@ -43,9 +47,6 @@ BEGIN {
 }
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-use Moose;
-extends 'Net::CLI::Interact::Transport';
-
 has 'connect_options' => (
     is => 'ro',
     isa => 'Net::CLI::Interact::Transport::Serial::Options',
@@ -53,23 +54,17 @@ has 'connect_options' => (
     required => 1,
 );
 
-has 'app' => (
-    is => 'ro',
-    isa => 'Str',
-    lazy_build => 1,
-);
-
 sub _build_app {
     my $self = shift;
     confess "please pass location of plink.exe in 'app' parameter to new()\n"
-        if $^O eq 'MSWin32';
+        if $self->is_win32;
     return 'cu'; # unix
 }
 
 sub runtime_options {
     my $self = shift;
 
-    if ($^O eq 'mswin32') {
+    if ($self->is_win32) {
         return ('-serial',);
     }
     else {
@@ -96,12 +91,12 @@ Net::CLI::Interact::Transport::Serial - Serial-line based CLI connection
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DECRIPTION
 
-This module provides an L<IPC::Run> wrapped instance of a Serial-line client
-for use by L<Net::CLI::Interact>.
+This module provides a wrapped instance of a Serial-line client for use by
+L<Net::CLI::Interact>.
 
 =head1 INTERFACE
 
@@ -141,6 +136,12 @@ value.
 
 You can set the speed (or I<baud rate>) of the serial line by passing a value
 to this named parameter. The default is C<9600>.
+
+=item reap
+
+Only used on Unix platforms, this installs a signal handler which attemps to
+reap the C<ssh> child process. Pass a true value to enable this feature only
+if you notice zombie processes are being left behind after use.
 
 =back
 

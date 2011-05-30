@@ -1,9 +1,13 @@
 package Net::CLI::Interact::Transport::Test;
 
+use Moose;
+extends 'Net::CLI::Interact::Transport';
+
 {
     package # hide from pause
         Net::CLI::Interact::Transport::Test::Options;
     use Moose;
+    extends 'Net::CLI::Interact::Transport::Options';
 
     use Moose::Util::TypeConstraints;
     coerce 'Net::CLI::Interact::Transport::Test::Options'
@@ -12,22 +16,12 @@ package Net::CLI::Interact::Transport::Test;
 }
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-use Moose;
-extends 'Net::CLI::Interact::Transport';
-
 has 'connect_options' => (
     is => 'ro',
     isa => 'Net::CLI::Interact::Transport::Test::Options',
     default => sub { {} },
     coerce => 1,
     required => 1,
-);
-
-has 'app' => (
-    is => 'ro',
-    isa => 'Str',
-    default => $^X,
-    required => 0,
 );
 
 #sub _which_perl {
@@ -39,6 +33,8 @@ has 'app' => (
 #    return $secure_perl_path;
 #}
 
+sub _build_app { return $^X }
+
 sub runtime_options {
     return ('-ne', 'BEGIN { $| = 1 }; print $_, time, "\nPROMPT>\n";');
 }
@@ -49,9 +45,8 @@ sub runtime_options {
 
 =head1 DECRIPTION
 
-This module provides an L<IPC::Run> wrapped instance of Perl which simply
-echoes back any input provided. This is used for the L<Net::CLI::Interact>
-test suite.
+This module provides a wrapped instance of Perl which simply echoes back any
+input provided. This is used for the L<Net::CLI::Interact> test suite.
 
 =head1 INTERFACE
 

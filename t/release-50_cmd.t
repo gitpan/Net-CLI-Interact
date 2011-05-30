@@ -1,5 +1,13 @@
 #!/usr/bin/perl
 
+BEGIN {
+  unless ($ENV{RELEASE_TESTING}) {
+    require Test::More;
+    Test::More::plan(skip_all => 'these tests are for release candidate testing');
+  }
+}
+
+
 use strict; use warnings FATAL => 'all';
 use Test::More 0.88;
 
@@ -13,6 +21,7 @@ my $s = new_ok('Net::CLI::Interact' => [{
 }]);
 
 $s->set_prompt('TEST_PROMPT_TWO'); # wrong!
+ok(! eval { $s->cmd('TEST COMMAND', {timeout => 0} ) }, 'timeout of zero not accepted');
 ok(! eval { $s->cmd('TEST COMMAND', {timeout => 1} ) }, 'wrong prompt causes timeout');
 
 # need to reinit the connection
@@ -23,5 +32,8 @@ like($out, qr/^\d{10}$/, 'sent data with named custom match');
 
 my $out2 = $s->cmd('TEST COMMAND', {match => qr/PROMPT>/});
 like($out2, qr/^\d{10}$/, 'sent data with regexp custom match');
+
+my $out3 = $s->cmd('TEST COMMAND', {match => [qr/PROMPT>/, qr/ANOTHER PROMPT>/]});
+like($out3, qr/^\d{10}$/, 'sent data with two regexp custom matches');
 
 done_testing;

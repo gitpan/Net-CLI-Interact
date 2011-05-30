@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Phrasebook;
 BEGIN {
-  $Net::CLI::Interact::Phrasebook::VERSION = '1.111150';
+  $Net::CLI::Interact::Phrasebook::VERSION = '1.111500';
 }
 
 use Moose;
@@ -145,12 +145,20 @@ sub load_phrasebooks {
                 next;
             }
 
-            if (m{^\s+(send(?:_no_ors)?)\s+(.+)$}) {
-                my ($type, $value) = ($1, $2);
+            if (m{^\s+send\s+(.+)$}) {
+                my $value = $1;
                 $value =~ s/^["']//; $value =~ s/["']$//;
                 push @{ $data->{actions} }, {
                     type => 'send', value => $value,
-                    no_ors => ($type eq 'send_no_ors')
+                };
+                next;
+            }
+
+            if (m{^\s+put\s+(.+)$}) {
+                my $value = $1;
+                $value =~ s/^["']//; $value =~ s/["']$//;
+                push @{ $data->{actions} }, {
+                    type => 'send', value => $value, no_ors => 1,
                 };
                 next;
             }
@@ -172,7 +180,7 @@ sub load_phrasebooks {
                 $send =~ s/^["']//; $send =~ s/["']$//;
                 $data->{actions}->[-1]->{continuation} = [
                     {type => 'match', value => qr/$match/},
-                    {type => 'send',  value => $send, no_ors => 1}
+                    {type => 'send',  value => eval "qq{$send}", no_ors => 1}
                 ];
                 next;
             }
@@ -234,7 +242,7 @@ Net::CLI::Interact::Phrasebook - Load command phrasebooks from a Library
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DESCRIPTION
 
@@ -470,7 +478,8 @@ the line. If you need to enclose whitespace use quotes, as in the example.
 
 The module will send the continuation text and gobble the matched prompt from
 the emitted output so you only have one complete piece of text returned, even
-if split over many pages.
+if split over many pages. The sent text can contain metacharacters such as
+C<\n> for a newline.
 
 Note that in the above example the C<follow> statement should be seen as an
 extension of the C<send> statement. There is still an implicit Match prompt
@@ -479,8 +488,8 @@ added at the end of this Macro, as per Automatic Matching, above.
 =item Line Endings
 
 Normally all sent command statements are appended with a newline (or the value
-of C<ors>, if set). To suppress that feature, use the keyword C<send_no_ors>
-instead of C<send>. However this does not prevent the Format Interpolation via
+of C<ors>, if set). To suppress that feature, use the keyword C<put> instead
+of C<send>. However this does not prevent the Format Interpolation via
 C<sprintf> as described above (simply use C<"%%"> to get a literal C<"%">).
 
 =back

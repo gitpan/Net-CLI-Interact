@@ -1,12 +1,16 @@
 package Net::CLI::Interact::Transport::Telnet;
 BEGIN {
-  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.111150';
+  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.111500';
 }
+
+use Moose;
+extends 'Net::CLI::Interact::Transport';
 
 {
     package # hide from pause
         Net::CLI::Interact::Transport::Telnet::Options;
     use Moose;
+    extends 'Net::CLI::Interact::Transport::Options';
 
     has 'host' => (
         is => 'rw',
@@ -21,8 +25,10 @@ BEGIN {
 }
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-use Moose;
-extends 'Net::CLI::Interact::Transport';
+# allow native use of Net::Telnet on Unix
+if (Net::CLI::Interact::Transport::is_win32) {
+    has '+use_net_telnet_connection' => ( default => 1 );
+}
 
 has 'connect_options' => (
     is => 'ro',
@@ -31,23 +37,18 @@ has 'connect_options' => (
     required => 1,
 );
 
-has 'app' => (
-    is => 'ro',
-    isa => 'Str',
-    lazy_build => 1,
-);
-
 sub _build_app {
     my $self = shift;
     confess "please pass location of plink.exe in 'app' parameter to new()\n"
-        if $^O eq 'MSWin32';
+        if $self->is_win32;
     return 'telnet'; # unix
 }
 
 sub runtime_options {
+    my $self = shift;
     return (
-        ($^O eq 'MSWin32' ? '-telnet' : ()),
-        (shift)->connect_options->host,
+        ($self->is_win32 ? '-telnet' : ()),
+        $self->connect_options->host,
     );
 }
 
@@ -65,12 +66,12 @@ Net::CLI::Interact::Transport::Telnet - TELNET based CLI connection
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DECRIPTION
 
-This module provides an L<IPC::Run> wrapped instance of a TELNET client for
-use by L<Net::CLI::Interact>.
+This module provides a wrapped instance of a TELNET client for use by
+L<Net::CLI::Interact>.
 
 =head1 INTERFACE
 
@@ -92,6 +93,12 @@ command line. Supported attributes:
 
 Host name or IP address of the host to which the TELNET application is to
 connect.
+
+=item reap
+
+Only used on Unix platforms, this installs a signal handler which attemps to
+reap the C<ssh> child process. Pass a true value to enable this feature only
+if you notice zombie processes are being left behind after use.
 
 =back
 

@@ -1,6 +1,6 @@
 package Net::CLI::Interact::ActionSet;
 BEGIN {
-  $Net::CLI::Interact::ActionSet::VERSION = '1.111150';
+  $Net::CLI::Interact::ActionSet::VERSION = '1.111500';
 }
 
 use Moose;
@@ -15,7 +15,7 @@ has default_continuation => (
 
 has current_match => (
     is => 'rw',
-    isa => 'Maybe[RegexpRef]',
+    isa => 'Maybe[RegexpRef|ArrayRef[RegexpRef]]',
     required => 0,
 );
 
@@ -176,7 +176,7 @@ Net::CLI::Interact::ActionSet - Conversation of Send and Match Actions
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DESCRIPTION
 

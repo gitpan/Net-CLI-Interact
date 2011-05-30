@@ -1,181 +1,28 @@
 package Net::CLI::Interact::Transport;
 BEGIN {
-  $Net::CLI::Interact::Transport::VERSION = '1.111150';
+  $Net::CLI::Interact::Transport::VERSION = '1.111500';
 }
 
 use Moose;
-use IPC::Run ();
 
-has 'logger' => (
-    is => 'ro',
-    isa => 'Net::CLI::Interact::Logger',
-    required => 1,
-);
+BEGIN {
+    sub is_win32 { return ($^O eq 'MSWin32') }
 
-has 'irs' => (
-    is => 'ro',
-    isa => 'Str',
-    default => "\n",
-    required => 0,
-);
-
-sub irs_re {
-    my $self = shift;
-    my $irs = $self->irs;
-    return qr/$irs/;
+    extends (is_win32()
+        ? 'Net::CLI::Interact::Transport::Base::Win32'
+        : 'Net::CLI::Interact::Transport::Base::Unix');
 }
 
-has 'ors' => (
-    is => 'ro',
-    isa => 'Str',
-    default => "\n",
-    required => 0,
-);
-
-has '_in' => (
-    is => 'rw',
-    isa => 'ScalarRef',
-    default => sub { \eval "''" },
-    required => 0,
-);
-
-# writer for the _in slot
-sub send { ${ (shift)->_in } .= join '', @_ }
-
-has '_out' => (
-    is => 'ro',
-    isa => 'ScalarRef',
-    default => sub { \eval "''" },
-    required => 0,
-);
-
-# mutator for the _out slot
-sub out {
-    my $self = shift;
-    return ${ $self->_out } if scalar(@_) == 0;
-    return ${ $self->_out } = shift;
-}
-
-has '_stash' => (
-    is => 'rw',
-    isa => 'Str',
-    default => '',
-    required => 0,
-);
-
-# clearer for the _out slot
-sub flush {
-    my $self = shift;
-    my $content = $self->_stash . $self->out;
-    $self->_stash('');
-    ${ $self->_out } = '';
-    return $content;
-}
-
-has '_err' => (
-    is => 'ro',
-    isa => 'ScalarRef',
-    default => sub { \eval "''" },
-    required => 0,
-);
-
-has 'harness' => (
-    is => 'rw',
-    isa => 'IPC::Run',
-    required => 0,
-    predicate => 'done_connect',
-    clearer => 'disconnect',
-);
-
-has '_timeout_obj' => (
-    is => 'ro',
-    isa => 'IPC::Run::Timer',
-    lazy_build => 1,
-    required => 0,
-);
-
-sub _build__timeout_obj { return IPC::Run::timeout((shift)->timeout) }
-
-has 'timeout' => (
-    is => 'rw',
-    isa => 'Int',
-    required => 0,
-    default => 10,
-    trigger => sub {
-        (shift)->_timeout_obj->start(shift) if scalar @_ > 1;
-    },
-);
-
-sub connect {
-    my $self = shift;
-    $self->logger->log('transport', 'notice', 'booting IPC::Run harness for', $self->app);
-
-    $self->flush;
-    $self->harness(
-        IPC::Run::harness(
-            [$self->app, $self->runtime_options],
-               $self->_in,
-               $self->_out,
-               $self->_err,
-               $self->_timeout_obj,
-        )
-    );
-}
-
-sub DEMOLISH {
-    my $self = shift;
-    $self->harness->kill_kill(grace => 1) if $^O eq 'MSWin32';
-}
-
-# returns either the content of the output buffer, or undef
-sub do_action {
-    my ($self, $action) = @_;
-    $self->logger->log('transport', 'info', 'callback received for', $action->type);
-
-    if ($action->type eq 'match') {
-        my $cont = $action->continuation;
-        while ($self->harness->pump) {
-            $self->logger->log('dump', 'debug', "SEEN:\n". $self->out);
-
-            my @out_lines = split $self->irs_re, $self->out;
-            next if !defined $out_lines[-1];
-
-            my $maybe_stash = join $self->irs, @out_lines[0 .. ($#out_lines - 1)];
-            my $last_out = $out_lines[-1];
-
-            if ($cont and $last_out =~ $cont->first->value) {
-                $self->logger->log('transport', 'debug', 'continuation matched');
-                $self->_stash($self->flush);
-                $self->send($cont->last->value);
-            }
-            elsif ($last_out =~ $action->value) {
-                $self->logger->log('transport', 'debug',
-                    sprintf 'output matched %s, storing and returning', $action->value);
-                # prompt match is line oriented. want to split that off from
-                # rest of output which is marshalled into the 'send'.
-                my @output = split $self->irs_re, $self->flush;
-                $action->response_stash(join $self->irs, @output[0 .. ($#output - 1)]);
-                $action->response($output[-1]);
-                last;
-            }
-            else {
-                $self->logger->log('transport', 'debug', "nope, doesn't (yet) match", $action->value);
-                # put back the partial output and try again
-                $self->_stash( $self->_stash . $maybe_stash );
-                $self->out($last_out);
-            }
-        }
-    }
-    if ($action->type eq 'send') {
-        my $command = sprintf $action->value, $action->params;
-        $self->logger->log('transport', 'debug', 'queueing data for send:', $command);
-        $self->send( $command, ($action->no_ors ? () : $self->ors) );
-    }
+{
+    package # hide from pause
+        Net::CLI::Interact::Transport::Options;
+    use Moose;
+    extends 'Net::CLI::Interact::Transport::Platform::Options';
 }
 
 1;
 
-# ABSTRACT: Wrapper for IPC::Run for a CLI
+# ABSTRACT: Spawns an Interactive CLI Session
 
 
 
@@ -184,44 +31,45 @@ __END__
 
 =head1 NAME
 
-Net::CLI::Interact::Transport - Wrapper for IPC::Run for a CLI
+Net::CLI::Interact::Transport - Spawns an Interactive CLI Session
 
 =head1 VERSION
 
-version 1.111150
+version 1.111500
 
 =head1 DESCRIPTION
 
-This module provides a wrapped interface to L<IPC::Run> for the purpose of
-interacting with a command line interface. Given an application path, the
-program will be started and an interface is provided to send commands and
-slurp the response output.
+This module provides a generic cross-platform interface with
+the purpose of interacting with a command line interface. On Windows the
+L<IPC::Run> module is used and on Unix, L<Net::Telnet>. In both cases, a
+program such as openssh is started and methods provided to send and receive
+data from the interactive session.
 
-You should not use this role directly, but instead consume it within a
+You should not use this class directly, but instead inherit from it in
 specific Transport that will set the application command line name, and
-marshall any runtime options.
+marshall any runtime options. The OS platform is detected automatically.
 
 =head1 INTERFACE
 
-=head2 connect
+=head2 init
 
-This method I<must> be called before any other, to establish the L<IPC::Run>
-infrastructure. However via L<Net::CLI::Interact>'s C<cmd>, C<match> or
-C<find_prompt> it will be called for you automatically.
+This method I<must> be called before any other, to bootstrap the application
+wrapper module (IPC::Run or Net::Telnet). However, via L<Net::CLI::Interact>'s
+C<cmd>, C<match> or C<find_prompt> it will be called for you automatically.
 
 Two attributes of the specific loaded Transport are used. First the
 Application set in C<app> is of course required, plus the options in the
 Transport's C<runtime_options> are retrieved, if set, and passed as command
 line arguments to the Application.
 
-=head2 done_connect
+=head2 connect_ready
 
 Returns True if C<connect> has been called successfully, otherwise returns
 False.
 
 =head2 disconnect
 
-Undefines the IPC::Run harness and flushes any output data buffer such that
+Undefines the application wrapper flushes any output data buffer such that
 the next call to C<cmd> or C<macro> will cause a new connection to be made.
 Useful if you intentionally timeout a command and end up with junk in the
 output buffer.
@@ -243,15 +91,16 @@ C<response> and C<response_stash> slots by this method, with the latter then
 marshalled into the correct C<send> Action by the
 L<ActionSet|Net::CLI::Interact::ActionSet>.
 
-=head2 send( @data )
+=head2 put( @data )
 
-Buffer for C<@data> which is to be sent to the connected CLI. Items in the
-list are joined together by an empty string.
+Items in C<@data> are joined together by an empty string and sent as input to
+the connected program's interactive session.
 
-=head2 out
+=head2 pump
 
-Buffer for response data returned from the connected CLI. You can check the
-content of the buffer without emptying it.
+Attempts to retrieve pending output from the connected program's interactive
+session. Returns true if there is new data available in the buffer, else
+will time-out and raise a Perl exception. See C<buffer> and C<timeout>.
 
 =head2 flush
 
@@ -260,12 +109,12 @@ returns that data as a single text string (possibly with embedded newlines).
 
 =head2 timeout( $seconds? )
 
-When C<do_action> is polling C<out> for response data matching a regular
-expression Action, it will eventually time-out and throw an exception if
-nothing matches and no more data arrives.
+When C<do_action> is polling for response data matching a regular expression
+Action, it will eventually time-out and throw an exception if nothing matches
+and no more data arrives.
 
 The number of seconds to wait is set via this method, which will also return
-the current value of C<timeout>.
+the current value of C<timeout>. The default value is 10 seconds.
 
 =head2 irs
 
@@ -283,10 +132,21 @@ C<split> the content of your Action's C<response> into lines.
 Line separator character(s) appended to a command sent to the connected CLI.
 This defaults to a newline on the application's platform.
 
-=head2 harness
+=head2 logger
 
-Slot for storing the L<IPC::Run> instance for the connected transport session.
-Do not mess with this unless you know what you are doing.
+Slot for storing a reference to the application's
+L<Logger|Net::CLI::Interact::Logger> object.
+
+=head2 is_win32
+
+Returns true if the current platform is Windows. Can be called as either a
+class or instance method.
+
+=head2 app
+
+Location and name of the program used to establish an interactive CLI session.
+On Unix platforms this will be C<ssh> (openssh), C<telnet>, or C<cu> (serial
+line). On Windows this must be the C<plink.exe> program.
 
 =head2 connect_options
 
@@ -294,10 +154,23 @@ Slot for storing a set of options for the specific loaded Transport, passed by
 the user of Net::CLI::Interact as a hash ref. Do not access this directly, but
 instead use C<runtime_options> from the specific Transport class.
 
-=head2 logger
+=head2 wrapper
 
-Slot for storing a reference to the application's
-L<Logger|Net::CLI::Interact::Logger> object.
+Slot for storing the application wrapper instance (IPC::Run or Net::Telnet).
+Do not mess with this unless you know what you are doing.
+
+=head2 buffer
+
+After C<pump> returns successfully, the output most recently received is
+stored in this slot. Do not access this directly, but instead use the C<flush>
+method.
+
+=head2 stash
+
+During long sections of output, this slot allows more efficient detection of
+matches. Older data is placed here, and only the most recent line of data is
+stored in the C<buffer>. That's why C<flush> is the only way to ensure you get
+all the output data in one go.
 
 =head1 AUTHOR
 
