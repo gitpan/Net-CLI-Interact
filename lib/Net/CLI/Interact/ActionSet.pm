@@ -1,11 +1,17 @@
 package Net::CLI::Interact::ActionSet;
 BEGIN {
-  $Net::CLI::Interact::ActionSet::VERSION = '1.111500';
+  $Net::CLI::Interact::ActionSet::VERSION = '1.111530';
 }
 
 use Moose;
 use Net::CLI::Interact::Action;
 with 'Net::CLI::Interact::Role::Iterator';
+
+use Moose::Util::TypeConstraints;
+subtype 'Net::CLI::Interact::ActionSet::CurrentMatchType'
+    => as 'Maybe[ArrayRef[RegexpRef]]';
+coerce 'Net::CLI::Interact::ActionSet::CurrentMatchType'
+    => from 'RegexpRef' => via { [$_] };
 
 has default_continuation => (
     is => 'rw',
@@ -15,8 +21,9 @@ has default_continuation => (
 
 has current_match => (
     is => 'rw',
-    isa => 'Maybe[RegexpRef|ArrayRef[RegexpRef]]',
+    isa => 'Net::CLI::Interact::ActionSet::CurrentMatchType',
     required => 0,
+    coerce => 1,
 );
 
 has '+_sequence' => (
@@ -25,6 +32,7 @@ has '+_sequence' => (
 
 sub BUILDARGS {
     my ($class, @rest) = @_;
+
     # accept single hash ref or naked hash
     my $params = (ref $rest[0] eq ref {} and scalar @rest == 1 ? $rest[0] : {@rest});
 
@@ -176,7 +184,7 @@ Net::CLI::Interact::ActionSet - Conversation of Send and Match Actions
 
 =head1 VERSION
 
-version 1.111500
+version 1.111530
 
 =head1 DESCRIPTION
 

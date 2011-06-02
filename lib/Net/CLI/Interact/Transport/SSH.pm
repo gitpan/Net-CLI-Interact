@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::SSH;
 BEGIN {
-  $Net::CLI::Interact::Transport::SSH::VERSION = '1.111500';
+  $Net::CLI::Interact::Transport::SSH::VERSION = '1.111530';
 }
 
 use Moose;
@@ -61,7 +61,7 @@ Net::CLI::Interact::Transport::SSH - SSH based CLI connection
 
 =head1 VERSION
 
-version 1.111500
+version 1.111530
 
 =head1 DECRIPTION
 

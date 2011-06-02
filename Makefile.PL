@@ -34,15 +34,12 @@ my %WriteMakefileArgs = (
     'Moose' => '0',
     'Moose::Role' => '0',
     'Moose::Util::TypeConstraints' => '0',
-    'Net::CLI::Interact::Transport::Base::Options' => '0',
-    'Net::CLI::Interact::Transport::Options' => '0',
-    'Net::CLI::Interact::Transport::Platform::Options' => '0',
     'Net::Telnet' => '0',
     'POSIX' => '0',
     'Path::Class' => '0',
     'Time::HiRes' => '0'
   },
-  'VERSION' => '1.111500',
+  'VERSION' => '1.111530',
   'test' => {
     'TESTS' => 't/*.t'
   }

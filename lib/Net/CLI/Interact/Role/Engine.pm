@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Role::Engine;
 BEGIN {
-  $Net::CLI::Interact::Role::Engine::VERSION = '1.111500';
+  $Net::CLI::Interact::Role::Engine::VERSION = '1.111530';
 }
 
 {
@@ -8,6 +8,11 @@ BEGIN {
         Net::CLI::Interact::Role::Engine::ExecuteOptions;
     use Moose;
     use Moose::Util::TypeConstraints;
+
+    subtype 'Net::CLI::Interact::Role::Engine::ExecuteOptions::MatchType'
+        => as 'ArrayRef[RegexpRef|Str]';
+    coerce 'Net::CLI::Interact::Role::Engine::ExecuteOptions::MatchType'
+        => from 'Str|RegexpRef' => via { [$_] };
 
     has 'no_ors' => (
         is => 'ro',
@@ -31,9 +36,10 @@ BEGIN {
 
     has 'match' => (
         is => 'rw',
-        isa => 'Str|RegexpRef|ArrayRef[RegexpRef]',
+        isa => 'Net::CLI::Interact::Role::Engine::ExecuteOptions::MatchType',
         predicate => 'has_match',
         required => 0,
+        coerce => 1,
     );
 
     sub BUILDARGS {
@@ -88,13 +94,16 @@ sub cmd {
     $self->logger->log('engine', 'notice', 'running command', $command);
 
     if ($options->has_match) {
-        # convert prompt name from user into regexpref, or die
-        if (ref $options->match eq ref '') {
-            $options->match(
-                $self->phrasebook->prompt( $options->match )->first->value );
-        }
+        # convert prompt name(s) from name into regexpref, or die
+        $options->match([
+            map { ref $_ eq ref '' ? @{ $self->phrasebook->prompt($_)->first->value }
+                                   : $_ }
+                @{ $options->match }
+        ]);
+
         $self->logger->log('engine', 'info', 'to match',
-            (ref $options->match eq ref [] ? (join '|', @{$options->match}) : $options->match));
+            (ref $options->match eq ref [] ? (join '|', @{$options->match})
+                                           : $options->match));
     }
 
     return $self->_execute_actions(
@@ -147,13 +156,9 @@ sub _execute_actions {
     $self->transport->timeout($timeout_bak);
     $self->last_actionset($set);
 
-    # if user used a match ref then we assume new prompt value
-    if ($self->last_actionset->last->is_lazy) {
-        $self->logger->log('prompt', 'info',
-            'last match was a prompt reference, setting new prompt');
-        # direct access to the slot
-        $self->_prompt($self->last_actionset->last->value);
-    }
+    $self->logger->log('prompt', 'info',
+        sprintf 'setting new prompt to %s', $self->last_actionset->last->prompt_hit);
+    $self->_prompt( $self->last_actionset->last->prompt_hit );
 
     return $self->last_response; # context sensitive
 }
@@ -172,7 +177,7 @@ Net::CLI::Interact::Role::Engine - Statement execution engine
 
 =head1 VERSION
 
-version 1.111500
+version 1.111530
 
 =head1 DESCRIPTION
 
@@ -203,11 +208,12 @@ overrides whatever is set in the Transport, or the default of 10 seconds.
 When passed a true value, a newline character (in fact the value of C<ors>)
 will not be appended to the statement sent to the device.
 
-=item C<< match => $name | $regexp  | \@regexps >> (optional)
+=item C<< match => $name | $regexpref | \@names_and_regexprefs >> (optional)
 
-Allows this command only to complete with a custom match, which may either be
-the name of a loaded phrasebook Prompt, or one of more of your own regular
-expression references (C<< qr// >>).
+Allows this command (only) to complete with a custom match, which must be one
+or more of either the name of a loaded phrasebook Prompt or your own regular
+expression reference (C<< qr// >>). The module updates the current prompt to
+be the same value on a successful match.
 
 =back
 

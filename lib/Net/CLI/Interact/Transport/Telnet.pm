@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Telnet;
 BEGIN {
-  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.111500';
+  $Net::CLI::Interact::Transport::Telnet::VERSION = '1.111530';
 }
 
 use Moose;
@@ -26,7 +26,7 @@ extends 'Net::CLI::Interact::Transport';
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # allow native use of Net::Telnet on Unix
-if (Net::CLI::Interact::Transport::is_win32) {
+if (Net::CLI::Interact::Transport::is_win32()) {
     has '+use_net_telnet_connection' => ( default => 1 );
 }
 
@@ -66,7 +66,7 @@ Net::CLI::Interact::Transport::Telnet - TELNET based CLI connection
 
 =head1 VERSION
 
-version 1.111500
+version 1.111530
 
 =head1 DECRIPTION
 

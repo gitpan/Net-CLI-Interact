@@ -22,6 +22,7 @@ my $s = new_ok('Net::CLI::Interact' => [{
 
 my $pb = $s->phrasebook;
 
+
 ok(eval { $pb->prompt('TEST_PROMPT_ONE') }, 'prompt exists');
 ok(! eval { $pb->prompt('TEST_PROMPT_XXX') }, 'prompt does not exist');
 

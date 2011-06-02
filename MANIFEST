@@ -14,6 +14,7 @@ lib/Net/CLI/Interact/Manual/Phrasebook.pod
 lib/Net/CLI/Interact/Manual/Tutorial.pod
 lib/Net/CLI/Interact/Phrasebook.pm
 lib/Net/CLI/Interact/Role/Engine.pm
+lib/Net/CLI/Interact/Role/FindMatch.pm
 lib/Net/CLI/Interact/Role/Iterator.pm
 lib/Net/CLI/Interact/Role/Prompt.pm
 lib/Net/CLI/Interact/Transport.pm

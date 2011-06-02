@@ -4,7 +4,7 @@
       "Oliver Gorwits <oliver@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.102400",
+   "generated_by" : "Dist::Zilla version 4.200000, CPAN::Meta::Converter version 2.102400",
    "license" : [
       "perl_5"
    ],
@@ -33,9 +33,6 @@
             "Moose" : 0,
             "Moose::Role" : 0,
             "Moose::Util::TypeConstraints" : 0,
-            "Net::CLI::Interact::Transport::Base::Options" : 0,
-            "Net::CLI::Interact::Transport::Options" : 0,
-            "Net::CLI::Interact::Transport::Platform::Options" : 0,
             "Net::Telnet" : 0,
             "POSIX" : 0,
             "Path::Class" : 0,
@@ -60,6 +57,6 @@
          "web" : "https://github.com/ollyg/Net-CLI-Interact"
       }
    },
-   "version" : "1.111500"
+   "version" : "1.111530"
 }
 

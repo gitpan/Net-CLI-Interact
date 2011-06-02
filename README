@@ -2,7 +2,7 @@ NAME
     Net::CLI::Interact - Toolkit for CLI Automation
 
 VERSION
-    version 1.111500
+    version 1.111530
 
 PURPOSE
     This module exists to support developers of applications and libraries
@@ -45,7 +45,9 @@ DESCRIPTION
     *   Reuseable device command phrasebooks
 
     If you're a new user, please read the Tutorial. There's also a Cookbook
-    and a Phrasebook Listing.
+    and a Phrasebook Listing. For a more complete worked example check out
+    the Net::Appliance::Session distribution, for which this module was
+    written.
 
 INTERFACE
   new( \%options )
