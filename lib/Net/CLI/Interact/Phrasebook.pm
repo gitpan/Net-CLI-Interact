@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Phrasebook;
 BEGIN {
-  $Net::CLI::Interact::Phrasebook::VERSION = '1.111530';
+  $Net::CLI::Interact::Phrasebook::VERSION = '1.111590';
 }
 
 use Moose;
@@ -237,7 +237,7 @@ Net::CLI::Interact::Phrasebook - Load command phrasebooks from a Library
 
 =head1 VERSION
 
-version 1.111530
+version 1.111590
 
 =head1 DESCRIPTION
 
