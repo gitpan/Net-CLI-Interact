@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Base::Unix;
-BEGIN {
-  $Net::CLI::Interact::Transport::Base::Unix::VERSION = '1.111590';
+{
+  $Net::CLI::Interact::Transport::Base::Unix::VERSION = '1.112190';
 }
 
 use Moose;
@@ -62,12 +62,6 @@ has '+timeout' => (
 
 has '+wrapper' => (
     isa => 'Net::Telnet',
-);
-
-has 'use_net_telnet_connection' => (
-    is => 'rw',
-    isa => 'Int',
-    default => 0,
 );
 
 override '_build_wrapper' => sub {

@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Base;
-BEGIN {
-  $Net::CLI::Interact::Transport::Base::VERSION = '1.111590';
+{
+  $Net::CLI::Interact::Transport::Base::VERSION = '1.112190';
 }
 
 use Moose;
@@ -12,6 +12,12 @@ with 'Net::CLI::Interact::Role::FindMatch';
         Net::CLI::Interact::Transport::Base::Options;
     use Moose;
 }
+
+has 'use_net_telnet_connection' => (
+    is => 'rw',
+    isa => 'Int',
+    default => 0,
+);
 
 has 'logger' => (
     is => 'ro',
