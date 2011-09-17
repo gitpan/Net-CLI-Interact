@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.30;
+use ExtUtils::MakeMaker 6.31;
 
 
 
@@ -15,7 +15,7 @@ my %WriteMakefileArgs = (
     'Test::More' => '0.88'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.30'
+    'ExtUtils::MakeMaker' => '6.31'
   },
   'DISTNAME' => 'Net-CLI-Interact',
   'EXE_FILES' => [],
@@ -39,7 +39,7 @@ my %WriteMakefileArgs = (
     'Path::Class' => '0',
     'Time::HiRes' => '0'
   },
-  'VERSION' => '1.112190',
+  'VERSION' => '1.112600',
   'test' => {
     'TESTS' => 't/*.t'
   }

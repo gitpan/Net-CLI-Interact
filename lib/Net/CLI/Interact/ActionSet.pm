@@ -1,6 +1,6 @@
 package Net::CLI::Interact::ActionSet;
-{
-  $Net::CLI::Interact::ActionSet::VERSION = '1.112190';
+BEGIN {
+  $Net::CLI::Interact::ActionSet::VERSION = '1.112600';
 }
 
 use Moose;
@@ -164,7 +164,7 @@ sub _marshall_responses {
         next unless $match->type eq 'match';
 
         # remove echoed command from the beginning
-        my $cmd = $send->value;
+        my $cmd = quotemeta( $send->value );
         (my $output = $match->response_stash) =~ s/^$cmd\s*//;
         $send->response($output);
     }
@@ -184,7 +184,7 @@ Net::CLI::Interact::ActionSet - Conversation of Send and Match Actions
 
 =head1 VERSION
 
-version 1.112190
+version 1.112600
 
 =head1 DESCRIPTION
 

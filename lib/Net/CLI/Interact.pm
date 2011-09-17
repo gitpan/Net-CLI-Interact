@@ -1,6 +1,6 @@
 package Net::CLI::Interact;
-{
-  $Net::CLI::Interact::VERSION = '1.112190';
+BEGIN {
+  $Net::CLI::Interact::VERSION = '1.112600';
 }
 
 {
@@ -149,7 +149,7 @@ Net::CLI::Interact - Toolkit for CLI Automation
 
 =head1 VERSION
 
-version 1.112190
+version 1.112600
 
 =head1 PURPOSE
 
