@@ -12,7 +12,9 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'Toolkit for CLI Automation',
   'AUTHOR' => 'Oliver Gorwits <oliver@cpan.org>',
   'BUILD_REQUIRES' => {
-    'Test::More' => '0.88'
+    'Test::More' => '0.88',
+    'strict' => '0',
+    'warnings' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.30'
@@ -39,7 +41,7 @@ my %WriteMakefileArgs = (
     'Path::Class' => '0',
     'Time::HiRes' => '0'
   },
-  'VERSION' => '1.120042',
+  'VERSION' => '1.120560',
   'test' => {
     'TESTS' => 't/*.t'
   }

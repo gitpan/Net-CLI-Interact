@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Role::ConnectCore;
 {
-  $Net::CLI::Interact::Transport::Role::ConnectCore::VERSION = '1.120042';
+  $Net::CLI::Interact::Transport::Role::ConnectCore::VERSION = '1.120560';
 }
 
 use Moose::Role;
