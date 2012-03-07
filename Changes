@@ -1,3 +1,8 @@
+1.120670  2012-03-07 20:20:06 Europe/London
+
+ * Fix IO::Pty dependency only to appear on non-Win32. This has required a
+   local hack to Dist::Zilla so please contact the author if you build from dist.ini.
+
 1.120560  2012-02-25 16:52:07 Europe/London
 
  * fix typo (C. Vicente)

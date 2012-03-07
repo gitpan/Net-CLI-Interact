@@ -12,9 +12,7 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'Toolkit for CLI Automation',
   'AUTHOR' => 'Oliver Gorwits <oliver@cpan.org>',
   'BUILD_REQUIRES' => {
-    'Test::More' => '0.88',
-    'strict' => '0',
-    'warnings' => '0'
+    'Test::More' => '0.88'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.30'
@@ -28,7 +26,6 @@ my %WriteMakefileArgs = (
     'Class::MOP::Class' => '0',
     'File::Basename' => '0',
     'FileHandle' => '0',
-    'IO::Pty' => '0',
     'IPC::Run' => '0',
     'List::Util' => '0',
     'Log::Dispatch::Config' => '0',
@@ -41,7 +38,7 @@ my %WriteMakefileArgs = (
     'Path::Class' => '0',
     'Time::HiRes' => '0'
   },
-  'VERSION' => '1.120560',
+  'VERSION' => '1.120670',
   'test' => {
     'TESTS' => 't/*.t'
   }
@@ -63,6 +60,10 @@ unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+if ( $^O =~ m/^(?!Win32)/ ) {
+  $WriteMakefileArgs{PREREQ_PM}{'IO::Pty'} = '0';
+}
 
 WriteMakefile(%WriteMakefileArgs);
 
