@@ -1,6 +1,6 @@
 package Net::CLI::Interact::Transport::Role::ConnectCore;
 {
-  $Net::CLI::Interact::Transport::Role::ConnectCore::VERSION = '2.123610';
+  $Net::CLI::Interact::Transport::Role::ConnectCore::VERSION = '2.123611';
 }
 
 use Moo::Role;
@@ -23,8 +23,6 @@ sub connect_core {
 sub _via_native {
     my $self = shift;
     my $t = Net::Telnet->new(Cmd_remove_mode => 1, @_);
-    $t->open()
-        or die "failed to open Net::Telnet connection to target device.";
     return $t;
 }
 
