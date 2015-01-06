@@ -38,4 +38,4 @@ requires:
   Sub::Quote: 0
   Time::HiRes: 0
   strict: 0
-version: 2.200000
+version: 2.200001
