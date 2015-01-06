@@ -6,19 +6,25 @@ build_requires:
   Test::More: 0.88
   warnings: 0
 configure_requires:
+  ExtUtils::CBuilder: 0
   ExtUtils::MakeMaker: 6.30
-dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300024, CPAN::Meta::Converter version 2.120921'
+dynamic_config: 1
+generated_by: 'ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Net-CLI-Interact
+no_index:
+  directory:
+    - t
+    - inc
 requires:
   Class::Load: 0
   Class::Mix: 0
   File::Basename: 0
   FileHandle: 0
+  IO::Pty: 0
   IPC::Run: 0
   List::Util: 0
   Log::Dispatch::Config: 0
@@ -32,8 +38,4 @@ requires:
   Sub::Quote: 0
   Time::HiRes: 0
   strict: 0
-resources:
-  bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Net-CLI-Interact
-  homepage: https://github.com/ollyg/Net-CLI-Interact/wiki
-  repository: git://github.com/ollyg/Net-CLI-Interact.git
-version: 2.143070
+version: 2.200000
